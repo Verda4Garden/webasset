@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Roblox Asset Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Admin specific custom overrides */
+        #adminContent {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/" class="brand">
+            <svg class="brand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+            Admin Panel
+        </a>
+        <div class="nav-links">
+            <button id="themeToggle" class="btn btn-outline" title="Toggle Dark Mode">
+                <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg id="sunIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <button id="btnLogout" class="btn btn-danger" style="display: none;">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Login Form -->
+        <div id="loginFormContainer" class="card" style="max-width: 400px; margin: 4rem auto;">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-control" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <span id="loginText">Login</span>
+                    <span id="loginSpinner" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin Content -->
+        <div id="adminContent">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 class="section-title" style="margin-bottom: 0;">Asset Manager</h1>
+                <button id="btnUpload" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Upload Asset
+                </button>
+            </div>
+
+            <div class="admin-table-container">
+                <table id="assetsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Original File</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assetsTableBody">
+                        <!-- Table rows generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Upload New Asset</h2>
+                <button class="modal-close" id="uploadModalClose">&times;</button>
+            </div>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label class="form-label" for="assetName">Name (Optional, overrides filename)</label>
+                    <input type="text" id="assetName" class="form-control" placeholder="e.g. My Awesome Map">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="assetDescription">Description</label>
+                    <textarea id="assetDescription" class="form-control" rows="3"
+                        placeholder="Brief description of the asset..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="assetStatus">Initial Status</label>
+                    <select id="assetStatus" class="form-control">
+                        <option value="OPEN">OPEN (Public)</option>
+                        <option value="CLOSED">CLOSED (Hidden)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div id="dropZone" class="upload-zone">
+                        <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Drag & drop a file here, or click to select</p>
+                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem;">Allowed: .rbxm, .rbxl, .zip,
+                            .png, .jpg</p>
+                        <input type="file" id="fileInput" style="display: none;"
+                            accept=".rbxm,.rbxl,.rbxmx,.zip,.png,.jpg,.jpeg">
+                    </div>
+                    <div id="selectedFile"
+                        style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-color); border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="selectedFileName">filename.zip</span>
+                        <button type="button" id="btnRemoveFile" class="btn btn-outline"
+                            style="padding: 0.25rem 0.5rem;">Remove</button>
+                    </div>
+                </div>
+                <button type="submit" id="btnSubmitUpload" class="btn btn-primary"
+                    style="width: 100%; justify-content: center;" disabled>
+                    Upload
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Confirm Action</h2>
+            </div>
+            <p id="confirmMessage" style="margin-bottom: 2rem;">Are you sure you want to proceed?</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="btnConfirmCancel" class="btn btn-outline">Cancel</button>
+                <button id="btnConfirmOk" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>
